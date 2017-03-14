@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<h1>Profile</h1>
+<hr/>
+
+<img src="{{ url_for('static', filename='.jpg') }}">
+
+<table>
+    <tr>
+        <td>{{ fname }} {{ lname }}</td>
+    </tr>
+    <tr>
+        <td>Profile Created On: {{ now }}</td>
+    </tr>
+    <tr>
+        <td>
+            Username: {{ user }} <br/>
+            ID Number: {{ userid }}<br/>
+            Age: {{ age }}<br/>
+            Gender: {{ gen }}
+        </td>
+    </tr>
+    <tr>
+        <td>{{ bio }}</td>
+    </tr>
+</table>
+
+{% endblock %}
+
+{% block css %}
+
+<style type="text/css">
+    img{
+        float:left;
+        padding-right:40px;
+    }
+    tr{
+        padding:10px;
+    }
+</style>
+
+{% endblock %}
