@@ -45,8 +45,8 @@ def profile():
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(file_folder, filename))
                 img=filename = secure_filename(file.filename)
-            newprofile = (fname, lname, user, age, gen, bio, img, date)
-            db.session.add(newprofile)
+            userprofile = UserProfile(fname, lname, user, age, gen, bio, img, date)
+            db.session.add(userprofile)
             db.session.commit()
         return redirect(url_for('profiles'))
     return render_template('profile.html', form=form)
@@ -62,10 +62,10 @@ def profiles():
     else:
         return render_template('profiles.html', profiles=profiles)
     
-@app.route('/profile/<id>')
+@app.route('/profile/<id>', methods = ['GET','POST'])
 def getprofile(id):
     user = UserProfile.query.filter_by(id=id)
-    img = '/static/uploads/' + user.img
+    img = user.img
     if request.method == 'POST':
         return jsonify(
             id=user.id,
