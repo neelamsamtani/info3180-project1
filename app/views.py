@@ -48,6 +48,7 @@ def profile():
             userprofile = UserProfile(fname, lname, user, age, gen, bio, img, date)
             db.session.add(userprofile)
             db.session.commit()
+        flash("Successfully created user.")
         return redirect(url_for('profiles'))
     return render_template('profile.html', form=form)
 
