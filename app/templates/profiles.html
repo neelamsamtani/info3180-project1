@@ -6,9 +6,9 @@
 
 <hr/>
 
-{% for user in profiles %}
+{% for x in profiles %}
 <ul>
-    <li>{{ user }}</li>
+    <li><a href="/profile/{{ x.id }}">{{ x.id }} : {{ x.user }}</a></li>
 </ul>
 {% endfor %}
 

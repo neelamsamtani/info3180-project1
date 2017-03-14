@@ -1,6 +1,7 @@
 from . import db
 
 class UserProfile(db.Model):
+    __tablename__ = 'profiles'
     id = db.Column(db.Integer, primary_key = True, unique = True, nullable = False)
     fname = db.Column(db.String(80))
     lname = db.Column(db.String(80))

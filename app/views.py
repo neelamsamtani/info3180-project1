@@ -5,15 +5,14 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 
-import datetime
+import datetime, os
 from app import app, db
 from flask import render_template, request, redirect, url_for, flash
 from flask import jsonify, session
 from flask_wtf import form
 from forms import ProfileForm
 from models import UserProfile
-
-
+from werkzeug.utils import secure_filename
 
 ###
 # Routing for your application.
@@ -31,30 +30,64 @@ def about():
 
 @app.route('/profile', methods=['POST', 'GET'])
 def profile():
-    form = ProfileForm()
+    file_folder = "app/static/uploads"
     if request.method == 'POST':
-        if form.validate_on_submit():
+        if ProfileForm().validate_on_submit():
             fname = request.form['fname']
             lname = request.form['lname']
             user = request.form['user']
             age = request.form['age']
             gen = request.form['gen']
             bio = request.form['bio']
-            img = request.form['img']
-            date = datetime.datetime.now()
-            #newprofile = (fname, lname, user, age, gen, bio, img, date)
-            #db.session.add(newprofile)
-            #db.session.commit()
-        return redirect(url_for('profile.html'))
-    return render_template('profile.html')
+            file = request.form['img']
+            date = datetime.datetime.now().strftime("%m-%d-%Y")
+            if file :
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(file_folder, filename))
+                img=filename = secure_filename(file.filename)
+            newprofile = (fname, lname, user, age, gen, bio, img, date)
+            db.session.add(newprofile)
+            db.session.commit()
+        return redirect(url_for('profiles'))
+    return render_template('profile.html', form=form)
 
-@app.route('/profiles')
+@app.route('/profiles', methods=['GET', 'POST'])
 def profiles():
-    return render_template('profiles.html')
+    profiles = db.session.query(UserProfile).all()
+    if request.method == "POST":
+        proflist = []
+        for prof in profiles:
+            proflist.append({'id':prof.id, 'username':prof.user})
+            return jsonify(profiles=proflist)
+    else:
+        return render_template('profiles.html', profiles=profiles)
     
-@app.route('/profile/<userid>')
-def getprofile():
-    return render_template('profilebase.html')
+@app.route('/profile/<id>')
+def getprofile(id):
+    user = UserProfile.query.filter_by(id=id)
+    img = '/static/uploads/' + user.img
+    if request.method == 'POST':
+        return jsonify(
+            id=user.id,
+            userfname=user.fname,
+            userlname=user.lname,
+            username=user.user,
+            usergen=user.gen,
+            userage=user.age,
+            userbio=user.bio,
+            img=user.img,
+            userdate=user.date)
+    else:
+        user = {'id':user.id,
+        'imge':img,
+        'username':user.username,
+        'fname':user.userfname,
+        'lname':user.userlname,
+        'age':user.userage,
+        'gender':user.usergender,
+        'bio':user.userbio,
+        'date':datetime.datetime.now().strftime("%m-%d-%Y")}
+    return render_template('profilebase.html', prof=user)
 
 
 ###

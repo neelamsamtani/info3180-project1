@@ -9,21 +9,24 @@
 
 <table>
     <tr>
-        <td>{{ fname }} {{ lname }}</td>
+        <td>{{ prof['fname'] }} {{ prof['lname'] }}</td>
     </tr>
     <tr>
-        <td>Profile Created On: {{ now }}</td>
+        <td>Profile Created On: {{ prof['date'] }}</td>
     </tr>
     <tr>
         <td>
-            Username: {{ user }} <br/>
-            ID Number: {{ userid }}<br/>
-            Age: {{ age }}<br/>
-            Gender: {{ gen }}
+            <img src = "{{ prof['img'] }}" width="200px" height="200px">
+        </td>
+        <td>
+            Username: {{ prof['user'] }} <br/>
+            ID Number: {{ prof['id'] }}<br/>
+            Age: {{ prof['age'] }}<br/>
+            Gender: {{ prof['gen'] }}
         </td>
     </tr>
     <tr>
-        <td>{{ bio }}</td>
+        <td>{{ prof['bio'] }}</td>
     </tr>
 </table>
 
